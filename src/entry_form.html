@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html> 
+<head>
+  <title>Product Form</title>
+  <a href="view_form.html">VIEWFORM</a>
+  <style>
+    /* CSS styles for the form */
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    select {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+    .section-heading {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  </style>
+  <script>
+    // JavaScript code to show/hide relevant field sections
+    function showSection() {
+      var productType = document.getElementById("productType").value;
+      
+      // Hide all field sections
+      var sections = document.getElementsByClassName("section");
+      for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.add("hidden");
+      }
+      
+      // Show relevant field section
+      var section = document.getElementById(productType);
+      if (section) {
+        section.classList.remove("hidden");
+      }
+    }
+
+    // JavaScript code to calculate profit and broker fee
+    function calculateValues() {
+      var sellingPrice = parseFloat(document.getElementById("sellingPrice").value);
+      var purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
+      var loanPrice = parseFloat(document.getElementById("loanPrice").value);
+
+      var profit = sellingPrice - purchasePrice;
+      var brokerFee = sellingPrice - loanPrice;
+
+      document.getElementById("profit").value = profit.toFixed(2) + " KSH";
+      document.getElementById("brokerFee").value = brokerFee.toFixed(2) + " KSH";
+    }
+
+    // JavaScript code to save form data in local storage
+    window.addEventListener("beforeunload", function() {
+      var formData = {
+        productType: document.getElementById("productType").value,
+        // Add other form fields here
+        sellingPrice: document.getElementById("sellingPrice").value,
+        purchasePrice: document.getElementById("purchasePrice").value,
+        loanPrice: document.getElementById("loanPrice").value
+        // Add other form fields here
+      };
+
+      localStorage.setItem("formData", JSON.stringify(formData));
+    });
+
+    window.addEventListener("load", function() {
+      var savedFormData = localStorage.getItem("formData");
+      if (savedFormData) {
+        var formData = JSON.parse(savedFormData);
+        document.getElementById("productType").value = formData.productType;
+        // Set other form fields here
+        document.getElementById("sellingPrice").value = formData.sellingPrice;
+        document.getElementById("purchasePrice").value = formData.purchasePrice;
+        document.getElementById("loanPrice").value = formData.loanPrice;
+        // Set other form fields here
+      }
+    });
+
+    // JavaScript code for form validation
+    function validateForm() {
+      var productType = document.getElementById("productType").value;
+      var errorMessage = "";
+
+      if (productType === "phone") {
+        var phoneStorage = document.getElementById("phoneStorage").value.trim();
+        var phoneRAM = document.getElementById("phoneRAM").value.trim();
+        var phoneBrand = document.getElementById("phoneBrand").value.trim();
+        var phoneVersion = document.getElementById("phoneVersion").value.trim();
+
+        if (phoneStorage === "" || phoneRAM === "" || phoneBrand === "" || phoneVersion === "") {
+          errorMessage = "Please fill in all phone details.";
+        }
+      } else if (productType === "watch") {
+        var watchType = document.getElementById("watchType").value.trim();
+        var watchBrand = document.getElementById("watchBrand").value.trim();
+
+        if (watchType === "" || watchBrand === "") {
+          errorMessage = "Please fill in all watch details.";
+        }
+      } else if (productType === "accessories") {
+        var accessoriesType = document.getElementById("accessoriesType").value.trim();
+        var accessoriesProduct = document.getElementById("accessoriesProduct").value.trim();
+
+        if (accessoriesType === "" || accessoriesProduct === "") {
+          errorMessage = "Please fill in all accessories details.";
+        }
+      }
+
+      if (errorMessage !== "") {
+        document.getElementById("error").textContent = errorMessage;
+        return false;
+      }
+
+      return true;
+    }
+  </script>
+</head>
+<body>
+  <div class="form-container">
+    <form  action="process_form.php" method="post" onsubmit="return validateForm()" >
+      <label for="productType">Product Type:</label>
+      <select id="productType" onchange="showSection()">
+        <option value="phone">Phone</option>
+        <option value="watch">Watch</option>
+        <option value="accessories">Accessories</option>
+      </select>
+      
+      <!-- Products section -->
+      <div id="phone" class="section">
+        <div class="section-heading">Phone Details</div>
+        <!-- Phone details fields -->
+        <label for="phoneStorage">Storage:</label>
+        <input type="text" id="phoneStorage">
+        <label for="phoneRAM">RAM:</label>
+        <input type="text" id="phoneRAM">
+        <label for="phoneBrand">Brand:</label>
+        <input type="text" id="phoneBrand">
+        <label for="phoneVersion">Version:</label>
+        <input type="text" id="phoneVersion">
+      </div>
+      
+      <div id="watch" class="section hidden">
+        <div class="section-heading">Watch Details</div>
+        <!-- Watch details fields -->
+        <label for="watchType">Type:</label>
+        <input type="text" id="watchType">
+        <label for="watchBrand">Brand:</label>
+        <input type="text" id="watchBrand">
+      </div>
+      
+      <div id="accessories" class="section hidden">
+        <div class="section-heading">Accessories Details</div>
+        <!-- Accessories details fields -->
+        <label for="accessoriesType">Type:</label>
+        <input type="text" id="accessoriesType">
+        <label for="accessoriesProduct">Product Name:</label>
+        <input type="text" id="accessoriesProduct">
+      </div>
+      
+      <!-- Product ID field -->
+       <label for="productID">Product ID:</label>
+       <input type="text" id="productID" name="productID">
+
+
+      <!-- Cash in details -->
+      <div class="section-heading">Cash In Details</div>
+      <label for="sellingPrice">Selling Price:</label>
+      <input type="text" id="sellingPrice" oninput="calculateValues()"> KSH
+      <label for="purchasePrice">Marked Price:</label>
+      <input type="text" id="purchasePrice" oninput="calculateValues()"> KSH
+      
+       <!-- Customer details -->
+       <div class="section-heading">Customer Details</div>
+       <label for="customerName">Name:</label>
+       <input type="text" id="customerName">
+       <label for="customerPhone">Phone Contact:</label>
+       <input type="text" id="customerPhone">
+       <label for="productPurchased">Product Purchased:</label>
+       <input type="text" id="productPurchased">
+       <label for="datePurchased">Date of Purchase:</label>
+       <input type="text" id="datePurchased">
+
+      <!-- Profit and broker fee -->
+      <label for="profit">Profit:</label>
+      <input type="text" id="profit" readonly>
+      <label for="brokerFee">Broker Fee:</label>
+      <input type="text" id="brokerFee" readonly>
+         
+       <!-- Supplier details -->
+       <div class="section-heading">Supplier Details</div>
+       <label for="supplierContacts">Contacts:</label>
+       <input type="text" id="supplierContacts">
+       <label for="supplierName">Name:</label>
+       <input type="text" id="supplierName">
+       <label for="productSupplied">Product Supplied:</label>
+       <input type="text" id="productSupplied">
+       <label for="dateSupplied">Date Supplied:</label>
+       <input type="text" id="dateSupplied">
+       <label for="supplyPrice">Supply Price:</label>
+       <input type="text" id="supplyPrice">
+  
+     
+
+      <!-- Cash out details -->
+      <div class="section-heading">Cash Out Products</div>
+      <label for="cashOutProductType">Product Type:</label>
+      <select id="cashOutProductType">
+        <option value="phone">Phone</option>
+        <option value="watch">Watch</option>
+        <option value="accessories">Accessories</option>
+      </select>
+      <label for="loanPrice">Loan Price:</label>
+      <input type="text" id="loanPrice">
+      <label for="sellingPrice">Selling Price:</label>
+      <input type="text" id="sellingPrice">
+      <label for="productDetails">Product Details:</label>
+      <input type="text" id="productDetails">   
+      
+   
+      
+      <!-- Error message -->
+      <div id="error" class="error-message"></div>
+      
+      <!-- Submit button -->
+      <input type="submit" value="Submit">
+    </form>
+    
+  </div>
+</body>
+</html>
+

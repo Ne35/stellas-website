@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Business Information</title>
+  <style> 
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      
+      h1, h2, h3 {
+        margin: 0;
+        padding: 0;
+      }
+      body
+      /* Monthly Summary Section */
+      .monthly-summary {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      
+      .monthly-summary h2 {
+        margin-bottom: 10px;
+        font-size: 24px;
+        color: #333;
+      }
+      
+      .monthly-summary label {
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+      }
+      
+      .monthly-summary select, .monthly-summary button {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+      
+      .monthly-summary button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      .monthly-summary button:hover {
+        background-color: #0056b3;
+      }
+      
+      .summary-info {
+        margin-top: 20px;
+      }
+      
+      .summary-info label {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+      }
+      
+      .summary-info span {
+        font-size: 18px;
+        color: #007bff;
+      }
+      
+      /* Product Details Section */
+      .product-details {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+      }
+      
+      .product-details h2 {
+        margin-bottom: 10px;
+        font-size: 24px;
+        color: #333;
+      }
+      
+      .product-details label {
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+      }
+      
+      .product-details select, .product-details input[type="text"], .product-details button {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+      
+      .product-details button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      .product-details button:hover {
+        background-color: #0056b3;
+      }
+      
+      .product-info {
+        margin-top: 20px;
+      }
+      
+      .product-info h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #333;
+      }
+      
+      .product-info p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #555;
+      }
+      
+      .purchase-history-table, .supply-information-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      
+      .purchase-history-table th, .purchase-history-table td,
+      .supply-information-table th, .supply-information-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ccc;
+        font-size: 14px;
+        color: #333;
+      }
+      
+      .purchase-history-table th:first-child, .supply-information-table th:first-child {
+        width: 20%;
+      }
+      
+      /* Responsive Styles */
+      @media (max-width: 600px) {
+        .container {
+          padding: 10px;
+        }
+      
+        .monthly-summary select, .monthly-summary button,
+        .product-details select, .product-details input[type="text"], .product-details button {
+          width: 100%;
+        }
+      }
+  </style>
+</head>
+<body>
+  <h1>Business Information</h1>
+
+  <h2>Monthly Summary</h2>
+  <div>
+    <label for="month">Select Month:</label>
+    <select id="month">
+      <option value="1">January</option>
+      <option value="2">February</option>
+      <!-- Add options for other months -->
+    </select>
+    <button onclick="calculateSummary()">Calculate</button>
+  </div>
+  <br>
+  <div>
+    <label for="totalProductsSold">Total Products Sold:</label>
+    <span id="totalProductsSold">-</span>
+  </div>
+  <br>
+  <div>
+    <label for="totalSpend">Total Spend on Acquiring:</label>
+    <span id="totalSpend">-</span>
+  </div>
+  <br>
+  <div>
+    <label for="totalProfit">Total Profit:</label>
+    <span id="totalProfit">-</span>
+  </div>
+  <br>
+  <hr>
+  <br>
+  <h2>Product Details</h2>
+  <div>
+    <label for="productType">Select Product Type:</label>
+    <select id="productType">
+      <option value="1">Phone</option>
+      <option value="2">Watch</option>
+      <option value="3">Accessory</option>
+    </select>
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId">
+    <button onclick="viewProductDetails()">View Details</button>
+  </div>
+  <br>
+  <div id="productDetails">
+    <h3>Product Information</h3>
+    <p><strong>Product Type:</strong> <span id="productTypeValue"></span></p>
+    <p><strong>Brand:</strong> <span id="productBrand"></span></p>
+    <p><strong>Version:</strong> <span id="productVersion"></span></p>
+    <p><strong>Storage:</strong> <span id="productStorage"></span></p>
+    <br>
+    <h3>Purchase History</h3>
+    <table id="purchaseHistoryTable">
+      <thead>
+        <tr>
+          <th>Date Purchased</th>
+          <th>Customer Name</th>
+          <th>Customer Phone</th>
+        </tr>
+      </thead>
+      <tbody id="purchaseHistoryBody">
+      </tbody>
+    </table>
+    <br>
+    <h3>Supply Information</h3>
+    <table id="supplyInformationTable">
+      <thead>
+        <tr>
+          <th>Date Supplied</th>
+          <th>Supplier Name</th>
+          <th>Supplier Contacts</th>
+          <th>Supply Price</th>
+        </tr>
+      </thead>
+      <tbody id="supplyInformationBody">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function calculateSummary() {
+      var month = document.getElementById("month").value;
+
+      // Send an AJAX request to the server to calculate the summary for the selected month
+      var url = "view_form.php?month=" + month;
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var summary = JSON.parse(xhr.responseText);
+
+          // Update the HTML elements with the calculated values
+          document.getElementById("totalProductsSold").textContent = summary.totalProductsSold;
+          document.getElementById("totalSpend").textContent = summary.totalSpend;
+          document.getElementById("totalProfit").textContent = summary.totalProfit;
+        }
+      };
+      xhr.send();
+    }
+
+    function viewProductDetails() {
+      var productType = document.getElementById("productType").value;
+      var productId = document.getElementById("productId").value;
+
+      // Send an AJAX request to the server to fetch the product details, purchase history, and supply information
+      var url = "view_form.php?type=" + productType + "&id=" + productId;
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+
+          // Update the HTML elements with the retrieved data
+          document.getElementById("productTypeValue").textContent = data.productType;
+          document.getElementById("productBrand").textContent = data.productBrand;
+          document.getElementById("productVersion").textContent = data.productVersion;
+          document.getElementById("productStorage").textContent = data.productStorage;
+
+          var purchaseHistoryBody = document.getElementById("purchaseHistoryBody");
+          purchaseHistoryBody.innerHTML = "";
+          for (var i = 0; i < data.purchaseHistory.length; i++) {
+            var row = document.createElement("tr");
+            var dateCell = document.createElement("td");
+            dateCell.textContent = data.purchaseHistory[i].datePurchased;
+            var customerNameCell = document.createElement("td");
+            customerNameCell.textContent = data.purchaseHistory[i].customerName;
+            var customerPhoneCell = document.createElement("td");
+            customerPhoneCell.textContent = data.purchaseHistory[i].customerPhone;
+
+            row.appendChild(dateCell);
+            row.appendChild(customerNameCell);
+            row.appendChild(customerPhoneCell);
+            purchaseHistoryBody.appendChild(row);
+          }
+
+          var supplyInformationBody = document.getElementById("supplyInformationBody");
+          supplyInformationBody.innerHTML = "";
+          for (var j = 0; j < data.supplyInformation.length; j++) {
+            var row = document.createElement("tr");
+            var dateCell = document.createElement("td");
+            dateCell.textContent = data.supplyInformation[j].dateSupplied;
+            var supplierNameCell = document.createElement("td");
+            supplierNameCell.textContent = data.supplyInformation[j].supplierName;
+            var supplierContactsCell = document.createElement("td");
+            supplierContactsCell.textContent = data.supplyInformation[j].supplierContacts;
+            var supplyPriceCell = document.createElement("td");
+            supplyPriceCell.textContent = data.supplyInformation[j].supplyPrice;
+
+            row.appendChild(dateCell);
+            row.appendChild(supplierNameCell);
+            row.appendChild(supplierContactsCell);
+            row.appendChild(supplyPriceCell);
+            supplyInformationBody.appendChild(row);
+          }
+        }
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+</html>
+
